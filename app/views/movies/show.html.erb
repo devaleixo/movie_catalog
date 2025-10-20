@@ -1,0 +1,58 @@
+<h1><%= @movie.title %></h1>
+
+<p>
+  <strong>Synopsis:</strong>
+  <%= @movie.synopsis %>
+</p>
+
+<p>
+  <strong>Release Year:</strong>
+  <%= @movie.release_year %>
+</p>
+
+<p>
+  <strong>Duration:</strong>
+  <%= @movie.duration %> minutes
+</p>
+
+<p>
+  <strong>Director:</strong>
+  <%= @movie.director %>
+</p>
+
+<% if user_signed_in? && @movie.user == current_user %>
+  <%= link_to 'Edit', edit_movie_path(@movie) %> |
+  <%= link_to 'Destroy', @movie, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %>
+<% end %>
+
+<hr>
+
+<h2>Comments</h2>
+
+<%= form_with(model: [@movie, @movie.comments.build]) do |form| %>
+  <% if !user_signed_in? %>
+    <p>
+      <%= form.label :author_name %><br>
+      <%= form.text_field :author_name %>
+    </p>
+  <% end %>
+  <p>
+    <%= form.label :content %><br>
+    <%= form.text_area :content %>
+  </p>
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>
+
+<div id="comments">
+  <% @movie.comments.order(created_at: :desc).each do |comment| %>
+    <p>
+      <strong><%= comment.user ? comment.user.email : comment.author_name %></strong>
+      <em><%= time_ago_in_words(comment.created_at) %> ago</em>
+    </p>
+    <p><%= comment.content %></p>
+  <% end %>
+</div>
+
+<%= link_to 'Back to movies', movies_path %>

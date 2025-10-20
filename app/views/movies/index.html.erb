@@ -1,0 +1,14 @@
+<h1>Movies</h1>
+
+<% if user_signed_in? %>
+  <%= link_to 'New Movie', new_movie_path %>
+<% end %>
+
+<div id="movies">
+  <% @movies.each do |movie| %>
+    <h2><%= link_to movie.title, movie %></h2>
+    <p><%= movie.synopsis %></p>
+  <% end %>
+</div>
+
+<%= paginate @movies %>
