@@ -31,12 +31,17 @@
     <%= form.number_field :duration %>
   </div>
 
-  <div class="field">
-    <%= form.label :director %>
-    <%= form.text_field :director %>
+  <div class="mb-3">
+    <%= form.label :director, class: 'form-label' %>
+    <%= form.text_field :director, class: 'form-control' %>
   </div>
 
-  <div class="actions">
-    <%= form.submit %>
+  <div class="mb-3">
+    <%= form.label :poster, class: 'form-label' %>
+    <%= form.file_field :poster, class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.submit class: 'btn btn-primary' %>
   </div>
 <% end %>

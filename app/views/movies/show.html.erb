@@ -1,58 +1,58 @@
-<h1><%= @movie.title %></h1>
+<div class="row">
+  <div class="col-md-4 mb-4">
+    <% if @movie.poster.attached? %>
+      <%= image_tag @movie.poster, class: "img-fluid rounded" %>
+    <% else %>
+      <%= image_tag "https://via.placeholder.com/400x600.png?text=No+Poster", class: "img-fluid rounded" %>
+    <% end %>
+  </div>
 
-<p>
-  <strong>Synopsis:</strong>
-  <%= @movie.synopsis %>
-</p>
+  <div class="col-md-8">
+    <div class="d-flex justify-content-between align-items-start">
+      <h1><%= @movie.title %></h1>
+      <% if user_signed_in? && @movie.user == current_user %>
+        <div>
+          <%= link_to 'Edit', edit_movie_path(@movie), class: 'btn btn-primary' %>
+          <%= button_to 'Destroy', @movie, method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+        </div>
+      <% end %>
+    </div>
 
-<p>
-  <strong>Release Year:</strong>
-  <%= @movie.release_year %>
-</p>
+    <p class="lead"><%= @movie.synopsis %></p>
+    <p><strong>Release Year:</strong> <%= @movie.release_year %></p>
+    <p><strong>Duration:</strong> <%= @movie.duration %> minutes</p>
+    <p><strong>Director:</strong> <%= @movie.director %></p>
 
-<p>
-  <strong>Duration:</strong>
-  <%= @movie.duration %> minutes
-</p>
+    <hr>
 
-<p>
-  <strong>Director:</strong>
-  <%= @movie.director %>
-</p>
+    <h2>Comments</h2>
 
-<% if user_signed_in? && @movie.user == current_user %>
-  <%= link_to 'Edit', edit_movie_path(@movie) %> |
-  <%= link_to 'Destroy', @movie, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %>
-<% end %>
+    <div id="comments">
+      <%= render @movie.comments.order(created_at: :desc) %>
+    </div>
 
-<hr>
+    <hr>
 
-<h2>Comments</h2>
+    <h4>Add a comment</h4>
+    <%= form_with(model: [@movie, @movie.comments.build]) do |form| %>
+      <% if !user_signed_in? %>
+        <div class="mb-3">
+          <%= form.label :author_name, class: 'form-label' %><br>
+          <%= form.text_field :author_name, class: 'form-control' %>
+        </div>
+      <% end %>
+      <div class="mb-3">
+        <%= form.label :content, class: 'form-label' %><br>
+        <%= form.text_area :content, rows: 3, class: 'form-control' %>
+      </div>
+      <div class="mb-3">
+        <%= form.submit 'Submit', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
 
-<%= form_with(model: [@movie, @movie.comments.build]) do |form| %>
-  <% if !user_signed_in? %>
-    <p>
-      <%= form.label :author_name %><br>
-      <%= form.text_field :author_name %>
-    </p>
-  <% end %>
-  <p>
-    <%= form.label :content %><br>
-    <%= form.text_area :content %>
-  </p>
-  <p>
-    <%= form.submit %>
-  </p>
-<% end %>
-
-<div id="comments">
-  <% @movie.comments.order(created_at: :desc).each do |comment| %>
-    <p>
-      <strong><%= comment.user ? comment.user.email : comment.author_name %></strong>
-      <em><%= time_ago_in_words(comment.created_at) %> ago</em>
-    </p>
-    <p><%= comment.content %></p>
-  <% end %>
+  </div>
 </div>
 
-<%= link_to 'Back to movies', movies_path %>
+<div class="mt-4">
+  <%= link_to 'Back to movies', movies_path, class: 'btn btn-secondary' %>
+</div>

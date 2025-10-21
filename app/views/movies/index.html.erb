@@ -1,14 +1,30 @@
-<h1>Movies</h1>
-
-<% if user_signed_in? %>
-  <%= link_to 'New Movie', new_movie_path %>
-<% end %>
-
-<div id="movies">
-  <% @movies.each do |movie| %>
-    <h2><%= link_to movie.title, movie %></h2>
-    <p><%= movie.synopsis %></p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>Movies</h1>
+  <% if user_signed_in? %>
+    <%= link_to 'New Movie', new_movie_path, class: 'btn btn-primary' %>
   <% end %>
 </div>
 
-<%= paginate @movies %>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+  <% @movies.each do |movie| %>
+    <div class="col">
+      <%= link_to movie, class: "text-decoration-none" do %>
+        <div class="card h-100 shadow-sm movie-card">
+          <% if movie.poster.attached? %>
+            <%= image_tag movie.poster, class: "card-img-top" %>
+          <% else %>
+            <%= image_tag "https://via.placeholder.com/400x600.png?text=No+Poster", class: "card-img-top" %>
+          <% end %>
+          <div class="card-body">
+            <h5 class="card-title"><%= movie.title %></h5>
+            <p class="card-text"><%= movie.release_year %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="d-flex justify-content-center mt-4">
+  <%= paginate @movies %>
+</div>

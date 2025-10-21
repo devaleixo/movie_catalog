@@ -1,0 +1,9 @@
+<div class="card mb-3">
+  <div class="card-body">
+    <p class="card-text">
+      <strong><%= comment.user ? comment.user.email : comment.author_name %></strong>
+      <em><%= time_ago_in_words(comment.created_at) %> ago</em>
+    </p>
+    <p class="card-text"><%= comment.content %></p>
+  </div>
+</div>
