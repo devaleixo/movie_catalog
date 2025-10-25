@@ -23,6 +23,17 @@
     <p><strong>Duration:</strong> <%= @movie.duration %> minutes</p>
     <p><strong>Director:</strong> <%= @movie.director %></p>
 
+    <p>
+      <strong>Categories:</strong>
+      <% if @movie.categories.any? %>
+        <% @movie.categories.each do |category| %>
+          <span class="badge bg-primary"><%= category.name %></span>
+        <% end %>
+      <% else %>
+        No categories assigned.
+      <% end %>
+    </p>
+
     <hr>
 
     <h2>Comments</h2>

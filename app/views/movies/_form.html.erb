@@ -41,6 +41,16 @@
     <%= form.file_field :poster, class: 'form-control' %>
   </div>
 
+  <div class="field">
+    <%= form.label :categories %>
+    <%= form.collection_check_boxes :category_ids, Category.all, :id, :name do |b| %>
+      <div class="form-check">
+        <%= b.check_box class: 'form-check-input' %>
+        <%= b.label class: 'form-check-label' %>
+      </div>
+    <% end %>
+  </div>
+
   <div class="mb-3">
     <%= form.submit class: 'btn btn-primary' %>
   </div>

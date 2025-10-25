@@ -4,7 +4,12 @@ class MoviesController < ApplicationController
   before_action :authorize_user!, only: [:edit, :update, :destroy]
 
   def index
-    @movies = Movie.order(release_year: :desc).page(params[:page]).per(6)
+    if params[:category_id].present?
+      @category = Category.find(params[:category_id])
+      @movies = @category.movies.order(release_year: :desc).page(params[:page]).per(6)
+    else
+      @movies = Movie.order(release_year: :desc).page(params[:page]).per(6)
+    end
   end
 
   def show
@@ -46,7 +51,7 @@ class MoviesController < ApplicationController
   end
 
   def movie_params
-    params.require(:movie).permit(:title, :synopsis, :release_year, :duration, :director, :poster)
+    params.require(:movie).permit(:title, :synopsis, :release_year, :duration, :director, :poster, category_ids: [])
   end
 
   def authorize_user!

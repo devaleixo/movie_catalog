@@ -1,8 +1,14 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1>Movies</h1>
-  <% if user_signed_in? %>
-    <%= link_to 'New Movie', new_movie_path, class: 'btn btn-primary' %>
-  <% end %>
+  <div class="d-flex align-items-center">
+    <%= form_with url: movies_path, method: :get, class: "d-flex me-2" do %>
+      <%= select_tag :category_id, options_from_collection_for_select(Category.all, :id, :name, params[:category_id]), include_blank: "All Categories", class: "form-select" %>
+      <%= submit_tag "Filter", class: "btn btn-primary ms-2" %>
+    <% end %>
+    <% if user_signed_in? %>
+      <%= link_to 'New Movie', new_movie_path, class: 'btn btn-primary' %>
+    <% end %>
+  </div>
 </div>
 
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
