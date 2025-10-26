@@ -1,5 +1,26 @@
-<footer class="footer mt-auto py-3 bg-dark text-white">
-  <div class="container text-center">
-    <span>&copy; <%= Time.now.year %> MovieCatalog. All Rights Reserved.</span>
+<footer class="footer mt-auto py-4 bg-dark text-white">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+        <h5 style="color: var(--color-gold); font-family: var(--font-primary); font-weight: 700; font-size: 1.2rem;">🎬 Catálogo de Filmes</h5>
+        <p style="color: var(--color-light-gray); font-size: 0.9rem; margin-bottom: 0.5rem;">A Essência da 7ª Arte</p>
+        <p style="color: var(--color-off-white); font-size: 0.85rem;">&copy; <%= Time.now.year %> MovieCatalog. Todos os direitos reservados.</p>
+      </div>
+      <div class="col-md-6 text-center text-md-end">
+        <p style="color: var(--color-gold); font-family: var(--font-primary); font-weight: 600; margin-bottom: 0.5rem;">Desenvolvido por</p>
+        <p style="margin-bottom: 0.25rem;">
+          <strong style="color: var(--color-white);">Devaleixo</strong>
+        </p>
+        <div class="d-flex justify-content-center justify-content-md-end gap-3 mt-2">
+          <a href="https://www.linkedin.com/in/devaleixo/" target="_blank" style="color: var(--color-gold); text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='var(--color-gold-light)'" onmouseout="this.style.color='var(--color-gold)'">
+            LinkedIn
+          </a>
+          <span style="color: var(--color-medium-gray);">|</span>
+          <a href="https://github.com/devaleixo" target="_blank" style="color: var(--color-gold); text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='var(--color-gold-light)'" onmouseout="this.style.color='var(--color-gold)'">
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </footer>

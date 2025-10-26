@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_25_165200) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_25_180404) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -68,6 +68,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_25_165200) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "import_statuses", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "filename"
+    t.string "status"
+    t.integer "total_rows"
+    t.integer "processed_rows"
+    t.integer "success_count"
+    t.integer "error_count"
+    t.text "error_messages"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_import_statuses_on_user_id"
+  end
+
   create_table "movies", force: :cascade do |t|
     t.string "title"
     t.text "synopsis"
@@ -77,6 +93,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_25_165200) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "rating", precision: 3, scale: 1, default: "0.0"
+    t.string "poster_url"
     t.index ["user_id"], name: "index_movies_on_user_id"
   end
 
@@ -98,5 +116,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_25_165200) do
   add_foreign_key "categories_movies", "movies"
   add_foreign_key "comments", "movies"
   add_foreign_key "comments", "users"
+  add_foreign_key "import_statuses", "users"
   add_foreign_key "movies", "users"
 end

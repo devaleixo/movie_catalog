@@ -1,6 +1,15 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  # Sidekiq Web UI (apenas para admins em produção)
+  mount Sidekiq::Web => '/sidekiq'
+  
+  resources :imports, only: [:index, :new, :create, :show]
   resources :categories
   resources :movies do
+    collection do
+      post :fetch_ai_data
+    end
     resources :comments, only: [:create]
   end
   devise_for :users

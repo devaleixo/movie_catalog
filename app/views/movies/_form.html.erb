@@ -1,4 +1,4 @@
-<%= form_with(model: movie) do |form| %>
+<%= form_with(model: movie, data: { controller: "movie-form" }) do |form| %>
   <% if movie.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(movie.errors.count, "error") %> prohibited this movie from being saved:</h2>
@@ -11,38 +11,92 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title %>
-  </div>
-
-  <div class="field">
-    <%= form.label :synopsis %>
-    <%= form.text_area :synopsis %>
-  </div>
-
-  <div class="field">
-    <%= form.label :release_year %>
-    <%= form.number_field :release_year %>
-  </div>
-
-  <div class="field">
-    <%= form.label :duration %>
-    <%= form.number_field :duration %>
+  <!-- Busca com IA -->
+  <div class="card mb-4" style="background-color: var(--color-dark-gray); border: 1px solid var(--color-accent);">
+    <div class="card-body">
+      <h5 class="card-title" style="color: var(--color-accent);">✨ Preencher com IA</h5>
+      <p class="card-text" style="color: var(--color-light-gray); font-size: 0.9rem;">
+        Digite o nome do filme e clique para preencher automaticamente os dados usando Inteligência Artificial.
+      </p>
+      <div class="row">
+        <div class="col-md-8 mb-2 mb-md-0">
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Ex: Matrix, Inception, Parasita..."
+            data-movie-form-target="aiSearchInput"
+            data-action="keypress->movie-form#handleKeypress"
+          >
+        </div>
+        <div class="col-md-4">
+          <button 
+            type="button" 
+            class="btn btn-primary w-100"
+            data-action="click->movie-form#fetchAiData"
+            data-movie-form-target="fetchButton"
+          >
+            <span data-movie-form-target="buttonText">🤖 Buscar Dados</span>
+            <span data-movie-form-target="buttonSpinner" class="d-none">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              Buscando...
+            </span>
+          </button>
+        </div>
+      </div>
+      <div data-movie-form-target="aiMessage" class="mt-2"></div>
+    </div>
   </div>
 
   <div class="mb-3">
-    <%= form.label :director, class: 'form-label' %>
-    <%= form.text_field :director, class: 'form-control' %>
+    <%= form.label :title, 'Título', class: 'form-label' %>
+    <%= form.text_field :title, class: 'form-control', data: { movie_form_target: "titleField" } %>
   </div>
 
   <div class="mb-3">
-    <%= form.label :poster, class: 'form-label' %>
-    <%= form.file_field :poster, class: 'form-control' %>
+    <%= form.label :synopsis, 'Sinopse', class: 'form-label' %>
+    <%= form.text_area :synopsis, rows: 4, class: 'form-control', data: { movie_form_target: "synopsisField" } %>
   </div>
 
-  <div class="field">
-    <%= form.label :categories %>
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <%= form.label :release_year, 'Ano de Lançamento', class: 'form-label' %>
+      <%= form.number_field :release_year, class: 'form-control', data: { movie_form_target: "releaseYearField" } %>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <%= form.label :duration, 'Duração (min)', class: 'form-label' %>
+      <%= form.number_field :duration, class: 'form-control', data: { movie_form_target: "durationField" } %>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <%= form.label :rating, 'Avaliação (0-5)', class: 'form-label' %>
+      <%= form.number_field :rating, step: 0.1, min: 0, max: 5, class: 'form-control', data: { movie_form_target: "ratingField" } %>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :director, 'Diretor', class: 'form-label' %>
+    <%= form.text_field :director, class: 'form-control', data: { movie_form_target: "directorField" } %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :poster, 'Pôster (Upload)', class: 'form-label' %>
+    <%= form.file_field :poster, class: 'form-control', accept: 'image/*' %>
+    <div class="form-text" style="color: var(--color-light-gray);">
+      Faça upload de uma imagem do seu computador
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :poster_url, 'Pôster (URL)', class: 'form-label' %>
+    <%= form.url_field :poster_url, class: 'form-control', placeholder: 'https://exemplo.com/poster.jpg' %>
+    <div class="form-text" style="color: var(--color-light-gray);">
+      Ou forneça um link direto para a imagem (será usado se não houver upload)
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :categories, 'Gêneros', class: 'form-label' %>
     <%= form.collection_check_boxes :category_ids, Category.all, :id, :name do |b| %>
       <div class="form-check">
         <%= b.check_box class: 'form-check-input' %>

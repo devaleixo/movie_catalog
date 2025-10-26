@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #d4af37, #800020); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+    .content { background: #f9f9f9; padding: 20px; border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px; }
+    .stats { background: white; padding: 15px; border-radius: 8px; margin: 15px 0; }
+    .stat-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+    .stat-item:last-child { border-bottom: none; }
+    .success { color: #28a745; font-weight: bold; }
+    .error { color: #dc3545; font-weight: bold; }
+    .button { display: inline-block; background: #d4af37; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>✅ Importação Concluída!</h1>
+    </div>
+    <div class="content">
+      <p>Olá <strong><%= @user.email %></strong>,</p>
+      
+      <p>A importação do arquivo <strong><%= @import_status.filename %></strong> foi concluída com sucesso!</p>
+      
+      <div class="stats">
+        <h3>📊 Resultados da Importação:</h3>
+        <div class="stat-item">
+          <span>Total de linhas processadas:</span>
+          <strong><%= @import_status.processed_rows %></strong>
+        </div>
+        <div class="stat-item">
+          <span>Filmes importados com sucesso:</span>
+          <strong class="success"><%= @import_status.success_count %></strong>
+        </div>
+        <% if @import_status.error_count > 0 %>
+          <div class="stat-item">
+            <span>Erros encontrados:</span>
+            <strong class="error"><%= @import_status.error_count %></strong>
+          </div>
+        <% end %>
+        <div class="stat-item">
+          <span>Tempo de processamento:</span>
+          <strong><%= @import_status.processing_time %> segundos</strong>
+        </div>
+      </div>
+
+      <% if @import_status.error_messages.present? %>
+        <div class="stats" style="background: #fff3cd; border-color: #ffc107;">
+          <h4 style="color: #856404;">⚠️ Detalhes dos Erros:</h4>
+          <pre style="white-space: pre-wrap; font-size: 12px;"><%= @import_status.error_messages %></pre>
+        </div>
+      <% end %>
+
+      <p style="margin-top: 20px;">
+        <a href="<%= movies_url %>" class="button">Ver Filmes Importados</a>
+      </p>
+
+      <p style="color: #666; font-size: 12px; margin-top: 30px;">
+        Este é um email automático. Por favor, não responda.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

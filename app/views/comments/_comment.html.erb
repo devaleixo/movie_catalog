@@ -1,9 +1,13 @@
-<div class="card mb-3">
-  <div class="card-body">
-    <p class="card-text">
-      <strong><%= comment.user ? comment.user.email : comment.author_name %></strong>
-      <em><%= time_ago_in_words(comment.created_at) %> ago</em>
-    </p>
-    <p class="card-text"><%= comment.content %></p>
+<div class="comment-card">
+  <div class="d-flex justify-content-between align-items-start mb-2">
+    <strong style="color: var(--color-gold); font-family: var(--font-primary);">
+      <%= comment.user ? comment.user.email : comment.author_name %>
+    </strong>
+    <em style="color: var(--color-light-gray); font-size: 0.85rem;">
+      <%= time_ago_in_words(comment.created_at) %> atrás
+    </em>
   </div>
+  <p style="color: var(--color-off-white); margin-bottom: 0; line-height: 1.6;">
+    <%= comment.content %>
+  </p>
 </div>

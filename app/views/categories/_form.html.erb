@@ -1,9 +1,8 @@
-<%= form_with(model: category) do |form| %>
+<%= form_with(model: category, local: true) do |form| %>
   <% if category.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(category.errors.count, "error") %> prohibited this category from being saved:</h2>
-
-      <ul>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(category.errors.count, "erro") %> impediu que esta categoria fosse salva:</h4>
+      <ul class="mb-0">
         <% category.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,12 +10,15 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+  <div class="mb-3">
+    <%= form.label :name, "Nome da Categoria", class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", placeholder: "Ex: Ação, Drama, Comédia..." %>
+    <div class="form-text" style="color: var(--color-light-gray);">
+      O nome será automaticamente formatado com a primeira letra maiúscula
+    </div>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="d-grid">
+    <%= form.submit category.new_record? ? "Criar Categoria" : "Atualizar Categoria", class: "btn btn-primary" %>
   </div>
 <% end %>

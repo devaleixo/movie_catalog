@@ -1,14 +1,33 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h1>Movies</h1>
-  <div class="d-flex align-items-center">
-    <%= form_with url: movies_path, method: :get, class: "d-flex me-2" do %>
-      <%= select_tag :category_id, options_from_collection_for_select(Category.all, :id, :name, params[:category_id]), include_blank: "All Categories", class: "form-select" %>
-      <%= submit_tag "Filter", class: "btn btn-primary ms-2" %>
-    <% end %>
-    <% if user_signed_in? %>
-      <%= link_to 'New Movie', new_movie_path, class: 'btn btn-primary' %>
+<div class="text-center mb-5">
+  <h1>🎬 Catálogo de Filmes</h1>
+  <p class="lead" style="color: var(--color-gold); font-family: var(--font-secondary);">A Essência da 7ª Arte</p>
+</div>
+
+<!-- Search Bar -->
+<div class="search-container mb-4">
+  <%= form_with url: movies_path, method: :get, local: true, class: "d-flex" do |f| %>
+    <%= f.text_field :search, 
+        value: params[:search], 
+        placeholder: "🔍 Buscar por título, diretor ou sinopse...", 
+        class: "form-control search-input flex-grow-1" %>
+  <% end %>
+</div>
+
+<!-- Filter and Actions Bar -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+  <div class="d-flex flex-column flex-md-row align-items-center gap-2 w-100 w-md-auto">
+    <%= form_with url: movies_path, method: :get, class: "d-flex align-items-center gap-2" do %>
+      <%= hidden_field_tag :search, params[:search] %>
+      <%= select_tag :category_id, 
+          options_from_collection_for_select(Category.all, :id, :name, params[:category_id]), 
+          include_blank: "🏷️ Todos os Gêneros", 
+          class: "form-select", 
+          onchange: "this.form.submit()" %>
     <% end %>
   </div>
+  <% if user_signed_in? %>
+    <%= link_to '➕ Novo Filme', new_movie_path, class: 'btn btn-primary' %>
+  <% end %>
 </div>
 
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
@@ -16,14 +35,26 @@
     <div class="col">
       <%= link_to movie, class: "text-decoration-none" do %>
         <div class="card h-100 shadow-sm movie-card">
-          <% if movie.poster.attached? %>
-            <%= image_tag movie.poster, class: "card-img-top" %>
-          <% else %>
-            <%= image_tag "https://via.placeholder.com/400x600.png?text=No+Poster", class: "card-img-top" %>
-          <% end %>
+          <div class="movie-card-img-container">
+            <% if movie.poster.attached? %>
+              <%= image_tag movie.poster %>
+            <% elsif movie.poster_url.present? %>
+              <%= image_tag movie.poster_url, alt: movie.title %>
+            <% else %>
+              <%= image_tag "https://via.placeholder.com/400x600.png?text=No+Poster" %>
+            <% end %>
+          </div>
           <div class="card-body">
             <h5 class="card-title"><%= movie.title %></h5>
-            <p class="card-text"><%= movie.release_year %></p>
+            <p class="card-text mb-2"><%= movie.release_year %></p>
+            <% if movie.rating && movie.rating > 0 %>
+              <div class="rating-stars">
+                <% (1..5).each do |i| %>
+                  <span class="star <%= i <= movie.star_rating ? '' : 'empty' %>">★</span>
+                <% end %>
+                <span class="rating-value"><%= number_with_precision(movie.star_rating, precision: 1) %></span>
+              </div>
+            <% end %>
           </div>
         </div>
       <% end %>

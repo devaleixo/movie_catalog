@@ -1,0 +1,23 @@
+❌ ERRO NA IMPORTAÇÃO
+
+Olá <%= @user.email %>,
+
+Infelizmente, ocorreu um erro ao processar o arquivo <%= @import_status.filename %>.
+
+🚨 DETALHES DO ERRO:
+<%= @import_status.error_messages %>
+
+📋 POSSÍVEIS SOLUÇÕES:
+- Verifique se o arquivo CSV está no formato correto
+- Certifique-se de que o cabeçalho contenha: title, synopsis, release_year, duration, director
+- Verifique se não há caracteres especiais que possam causar problemas
+- Tente novamente com um arquivo menor para teste
+
+FORMATO ESPERADO DO CSV:
+title,synopsis,release_year,duration,director,rating,categories
+Matrix,Um hacker descobre a realidade,1999,136,Lana Wachowski,4.6,Ação|Ficção Científica
+
+Acesse: <%= root_url %>
+
+---
+Este é um email automático. Por favor, não responda.

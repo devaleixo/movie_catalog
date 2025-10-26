@@ -1,0 +1,68 @@
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="text-center mb-4">
+      <h1>📂 Importar Filmes em Massa</h1>
+      <p class="lead" style="color: var(--color-gold);">Faça upload de um arquivo CSV para importar múltiplos filmes</p>
+    </div>
+
+    <div class="card" style="background-color: var(--color-dark-gray); border: 1px solid var(--color-medium-gray); border-radius: 12px; padding: 2rem;">
+      <%= form_with(model: @import_status, url: imports_path, local: true, multipart: true) do |form| %>
+        <div class="mb-4">
+          <%= form.label :file, 'Arquivo CSV', class: 'form-label' %>
+          <%= form.file_field :file, accept: '.csv', class: 'form-control', required: true %>
+          <div class="form-text" style="color: var(--color-light-gray);">
+            Selecione um arquivo .CSV com os dados dos filmes
+          </div>
+        </div>
+
+        <div class="alert alert-info" style="background-color: var(--color-medium-gray); border-color: var(--color-gold); color: var(--color-off-white);">
+          <h5 style="color: var(--color-gold);">📋 Formato do Arquivo CSV</h5>
+          <p>O arquivo deve conter as seguintes colunas (nesta ordem):</p>
+          <ul class="mb-2">
+            <li><strong>title</strong> - Título do filme</li>
+            <li><strong>synopsis</strong> - Sinopse/descrição</li>
+            <li><strong>release_year</strong> - Ano de lançamento</li>
+            <li><strong>duration</strong> - Duração em minutos</li>
+            <li><strong>director</strong> - Nome do diretor</li>
+            <li><strong>rating</strong> (opcional) - Avaliação de 0 a 5</li>
+            <li><strong>categories</strong> (opcional) - Gêneros separados por | (pipe)</li>
+          </ul>
+          <p class="mb-0"><strong>Exemplo:</strong></p>
+          <pre style="background-color: var(--color-deep-black); padding: 10px; border-radius: 5px; font-size: 12px;">title,synopsis,release_year,duration,director,rating,categories
+Matrix,Um hacker descobre a realidade,1999,136,Lana Wachowski,4.6,Ação|Ficção Científica
+Inception,Um ladrão rouba segredos dos sonhos,2010,148,Christopher Nolan,4.7,Ação|Ficção Científica</pre>
+        </div>
+
+        <div class="alert alert-warning" style="background-color: #fff3cd; border-color: #ffc107; color: #856404;">
+          <strong>⚠️ Importante:</strong>
+          <ul class="mb-0">
+            <li>O processamento será feito em segundo plano (background)</li>
+            <li>Você receberá um email quando a importação for concluída</li>
+            <li>Pode acompanhar o status na página de histórico de importações</li>
+            <li>Filmes com títulos duplicados serão ignorados</li>
+          </ul>
+        </div>
+
+        <div class="d-grid gap-2">
+          <%= form.submit '📤 Iniciar Importação', class: 'btn btn-primary btn-lg' %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-4 text-center">
+      <%= link_to '📋 Ver Histórico de Importações', imports_path, class: 'btn btn-secondary me-2' %>
+      <%= link_to '⬅ Voltar', movies_path, class: 'btn btn-secondary' %>
+    </div>
+
+    <div class="mt-4 card" style="background-color: var(--color-dark-gray); border: 1px solid var(--color-medium-gray); padding: 1.5rem;">
+      <h5 style="color: var(--color-gold);">💡 Dicas para Importação:</h5>
+      <ul style="color: var(--color-off-white);">
+        <li>Certifique-se de que o arquivo está codificado em UTF-8</li>
+        <li>Use vírgula (,) como delimitador de campos</li>
+        <li>Para categorias múltiplas, separe com pipe (|)</li>
+        <li>Teste primeiro com um arquivo pequeno (5-10 filmes)</li>
+        <li>Verifique se não há vírgulas dentro dos textos (use aspas se necessário)</li>
+      </ul>
+    </div>
+  </div>
+</div>

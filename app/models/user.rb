@@ -4,4 +4,5 @@ class User < ApplicationRecord
 
   has_many :movies
   has_many :comments
+  has_many :import_statuses
 end

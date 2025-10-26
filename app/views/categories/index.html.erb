@@ -1,16 +1,35 @@
-<p style="color: green"><%= notice %></p>
+<div class="text-center mb-5">
+  <h1>🏷️ Categorias</h1>
+  <p class="lead" style="color: var(--color-gold); font-family: var(--font-secondary);">Gerencie os gêneros do catálogo</p>
+</div>
 
-<% content_for :title, "Categories" %>
-
-<h1>Categories</h1>
-
-<div id="categories">
-  <% @categories.each do |category| %>
-    <%= render category %>
-    <p>
-      <%= link_to "Show this category", category %>
-    </p>
+<div class="mb-4 text-end">
+  <% if user_signed_in? %>
+    <%= link_to '➕ Nova Categoria', new_category_path, class: 'btn btn-primary' %>
   <% end %>
 </div>
 
-<%= link_to "New category", new_category_path %>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+  <% @categories.each do |category| %>
+    <div class="col">
+      <div class="card h-100" style="background-color: var(--color-dark-gray); border: 1px solid var(--color-medium-gray); border-radius: 12px;">
+        <div class="card-body">
+          <h5 class="card-title" style="color: var(--color-gold); font-family: var(--font-primary);">
+            <%= category.name %>
+          </h5>
+          <p class="card-text text-muted">
+            <%= pluralize(category.movies.count, 'filme', 'filmes') %>
+          </p>
+          <% if user_signed_in? %>
+            <div class="d-flex gap-2 mt-3">
+              <%= link_to '✏️ Editar', edit_category_path(category), class: 'btn btn-secondary btn-sm' %>
+              <%= button_to '🗑️ Excluir', category_path(category), method: :delete, 
+                  data: { confirm: 'Tem certeza?' }, 
+                  class: 'btn btn-danger btn-sm' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

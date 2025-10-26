@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #dc3545, #800020); color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+    .content { background: #f9f9f9; padding: 20px; border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px; }
+    .error-box { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 15px; border-radius: 8px; margin: 15px 0; }
+    .button { display: inline-block; background: #dc3545; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>❌ Erro na Importação</h1>
+    </div>
+    <div class="content">
+      <p>Olá <strong><%= @user.email %></strong>,</p>
+      
+      <p>Infelizmente, ocorreu um erro ao processar o arquivo <strong><%= @import_status.filename %></strong>.</p>
+      
+      <div class="error-box">
+        <h4>🚨 Detalhes do Erro:</h4>
+        <pre style="white-space: pre-wrap; font-size: 12px; margin: 10px 0;"><%= @import_status.error_messages %></pre>
+      </div>
+
+      <h4>📋 Possíveis Soluções:</h4>
+      <ul>
+        <li>Verifique se o arquivo CSV está no formato correto</li>
+        <li>Certifique-se de que o cabeçalho contenha: title, synopsis, release_year, duration, director</li>
+        <li>Verifique se não há caracteres especiais que possam causar problemas</li>
+        <li>Tente novamente com um arquivo menor para teste</li>
+      </ul>
+
+      <p>Formato esperado do CSV:</p>
+      <pre style="background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 12px;">title,synopsis,release_year,duration,director,rating,categories
+Matrix,Um hacker descobre a realidade,1999,136,Lana Wachowski,4.6,Ação|Ficção Científica</pre>
+
+      <p style="margin-top: 20px;">
+        <a href="<%= root_url %>" class="button">Voltar ao Início</a>
+      </p>
+
+      <p style="color: #666; font-size: 12px; margin-top: 30px;">
+        Este é um email automático. Por favor, não responda.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="text-center mb-4">
+      <h1>📊 Detalhes da Importação</h1>
+      <p class="lead" style="color: var(--color-gold);"><%= @import_status.filename %></p>
+    </div>
+
+    <div class="card" style="background-color: var(--color-dark-gray); border: 1px solid var(--color-medium-gray); border-radius: 12px; padding: 2rem;">
+      <!-- Status Badge -->
+      <div class="text-center mb-4">
+        <% case @import_status.status %>
+        <% when 'pending' %>
+          <span class="badge bg-secondary" style="font-size: 1.5rem; padding: 1rem 2rem;">
+            ⏳ Aguardando Processamento
+          </span>
+          <p class="text-muted mt-3">A importação está na fila e será processada em breve.</p>
+        <% when 'processing' %>
+          <span class="badge bg-info" style="font-size: 1.5rem; padding: 1rem 2rem;">
+            ⚙️ Processando...
+          </span>
+          <p class="text-muted mt-3">A importação está sendo processada. Esta página será atualizada automaticamente.</p>
+        <% when 'completed' %>
+          <span class="badge bg-success" style="font-size: 1.5rem; padding: 1rem 2rem;">
+            ✅ Importação Concluída
+          </span>
+        <% when 'failed' %>
+          <span class="badge bg-danger" style="font-size: 1.5rem; padding: 1rem 2rem;">
+            ❌ Importação Falhou
+          </span>
+        <% end %>
+      </div>
+
+      <!-- Informações Gerais -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <div class="card" style="background-color: var(--color-medium-gray); padding: 1rem;">
+            <h6 style="color: var(--color-gold);">📅 Criada em</h6>
+            <p class="mb-0"><%= @import_status.created_at.strftime('%d/%m/%Y às %H:%M:%S') %></p>
+          </div>
+        </div>
+        
+        <% if @import_status.started_at %>
+          <div class="col-md-6">
+            <div class="card" style="background-color: var(--color-medium-gray); padding: 1rem;">
+              <h6 style="color: var(--color-gold);">▶️ Iniciada em</h6>
+              <p class="mb-0"><%= @import_status.started_at.strftime('%d/%m/%Y às %H:%M:%S') %></p>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @import_status.completed_at %>
+          <div class="col-md-6">
+            <div class="card" style="background-color: var(--color-medium-gray); padding: 1rem;">
+              <h6 style="color: var(--color-gold);">🏁 Concluída em</h6>
+              <p class="mb-0"><%= @import_status.completed_at.strftime('%d/%m/%Y às %H:%M:%S') %></p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card" style="background-color: var(--color-medium-gray); padding: 1rem;">
+              <h6 style="color: var(--color-gold);">⏱️ Tempo de Processamento</h6>
+              <p class="mb-0"><%= @import_status.processing_time %> segundos</p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Estatísticas (apenas se completo) -->
+      <% if @import_status.completed? || @import_status.processing? %>
+        <div class="card mb-4" style="background-color: var(--color-medium-gray); padding: 1.5rem;">
+          <h5 style="color: var(--color-gold);" class="mb-3">📊 Estatísticas</h5>
+          
+          <div class="row g-3">
+            <% if @import_status.total_rows %>
+              <div class="col-md-3">
+                <div class="text-center">
+                  <h3 class="mb-0"><%= @import_status.total_rows %></h3>
+                  <small class="text-muted">Total de Linhas</small>
+                </div>
+              </div>
+            <% end %>
+
+            <% if @import_status.processed_rows %>
+              <div class="col-md-3">
+                <div class="text-center">
+                  <h3 class="mb-0"><%= @import_status.processed_rows %></h3>
+                  <small class="text-muted">Processadas</small>
+                </div>
+              </div>
+            <% end %>
+
+            <% if @import_status.success_count %>
+              <div class="col-md-3">
+                <div class="text-center">
+                  <h3 class="mb-0 text-success"><%= @import_status.success_count %></h3>
+                  <small class="text-muted">Sucessos</small>
+                </div>
+              </div>
+            <% end %>
+
+            <% if @import_status.error_count %>
+              <div class="col-md-3">
+                <div class="text-center">
+                  <h3 class="mb-0 text-danger"><%= @import_status.error_count %></h3>
+                  <small class="text-muted">Erros</small>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+          <% if @import_status.processing? && @import_status.total_rows && @import_status.total_rows > 0 %>
+            <div class="mt-3">
+              <div class="progress" style="height: 25px;">
+                <% progress = (@import_status.processed_rows.to_f / @import_status.total_rows * 100).round %>
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" 
+                     role="progressbar" 
+                     style="width: <%= progress %>%" 
+                     aria-valuenow="<%= progress %>" 
+                     aria-valuemin="0" 
+                     aria-valuemax="100">
+                  <%= progress %>%
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- Mensagens de Erro -->
+      <% if @import_status.error_messages.present? %>
+        <div class="alert alert-danger">
+          <h5>🚨 Erros Encontrados:</h5>
+          <pre style="white-space: pre-wrap; font-size: 12px; max-height: 300px; overflow-y: auto; background-color: #fff; padding: 10px; border-radius: 5px; color: #333;"><%= @import_status.error_messages %></pre>
+        </div>
+      <% end %>
+
+      <!-- Auto-refresh se estiver processando -->
+      <% if @import_status.processing? || @import_status.pending? %>
+        <div class="alert alert-info">
+          <p class="mb-0">
+            🔄 Esta página será atualizada automaticamente a cada 5 segundos...
+          </p>
+        </div>
+        <meta http-equiv="refresh" content="5">
+      <% end %>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="mt-4 text-center">
+      <%= link_to '📋 Ver Histórico', imports_path, class: 'btn btn-secondary me-2' %>
+      <% if @import_status.completed? %>
+        <%= link_to '🎬 Ver Filmes', movies_path, class: 'btn btn-primary me-2' %>
+      <% end %>
+      <%= link_to '⬅ Voltar', :back, class: 'btn btn-secondary' %>
+    </div>
+  </div>
+</div>

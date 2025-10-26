@@ -1,0 +1,21 @@
+✅ IMPORTAÇÃO CONCLUÍDA!
+
+Olá <%= @user.email %>,
+
+A importação do arquivo <%= @import_status.filename %> foi concluída com sucesso!
+
+📊 RESULTADOS DA IMPORTAÇÃO:
+- Total de linhas processadas: <%= @import_status.processed_rows %>
+- Filmes importados com sucesso: <%= @import_status.success_count %>
+<% if @import_status.error_count > 0 %>- Erros encontrados: <%= @import_status.error_count %><% end %>
+- Tempo de processamento: <%= @import_status.processing_time %> segundos
+
+<% if @import_status.error_messages.present? %>
+⚠️ DETALHES DOS ERROS:
+<%= @import_status.error_messages %>
+<% end %>
+
+Acesse: <%= movies_url %>
+
+---
+Este é um email automático. Por favor, não responda.

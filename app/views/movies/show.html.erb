@@ -1,50 +1,75 @@
 <div class="row">
-  <div class="col-md-4 mb-4">
+  <div class="col-md-4 col-lg-3 mb-4 d-flex justify-content-center">
     <% if @movie.poster.attached? %>
-      <%= image_tag @movie.poster, class: "img-fluid rounded" %>
+      <%= image_tag @movie.poster, class: "img-fluid movie-detail-poster" %>
+    <% elsif @movie.poster_url.present? %>
+      <%= image_tag @movie.poster_url, alt: @movie.title, class: "img-fluid movie-detail-poster" %>
     <% else %>
-      <%= image_tag "https://via.placeholder.com/400x600.png?text=No+Poster", class: "img-fluid rounded" %>
+      <%= image_tag "https://via.placeholder.com/400x600.png?text=No+Poster", class: "img-fluid movie-detail-poster" %>
     <% end %>
   </div>
 
-  <div class="col-md-8">
-    <div class="d-flex justify-content-between align-items-start">
-      <h1><%= @movie.title %></h1>
+  <div class="col-md-8 col-lg-9">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3">
+      <div class="flex-grow-1 mb-3 mb-md-0">
+        <h1 class="mb-2"><%= @movie.title %></h1>
+        <% if @movie.rating && @movie.rating > 0 %>
+          <div class="rating-stars mb-3" style="font-size: 1.2rem;">
+            <% (1..5).each do |i| %>
+              <span class="star <%= i <= @movie.star_rating ? '' : 'empty' %>">★</span>
+            <% end %>
+            <span class="rating-value" style="font-size: 1.1rem;"><%= number_with_precision(@movie.star_rating, precision: 1) %></span>
+          </div>
+        <% end %>
+      </div>
       <% if user_signed_in? && @movie.user == current_user %>
-        <div>
-          <%= link_to 'Edit', edit_movie_path(@movie), class: 'btn btn-primary' %>
-          <%= button_to 'Destroy', @movie, method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+        <div class="d-flex gap-2">
+          <%= link_to 'Editar', edit_movie_path(@movie), class: 'btn btn-primary' %>
+          <%= button_to 'Excluir', @movie, method: :delete, data: { turbo_confirm: 'Tem certeza?' }, class: 'btn btn-danger' %>
         </div>
       <% end %>
     </div>
 
-    <p class="lead"><%= @movie.synopsis %></p>
-    <p><strong>Release Year:</strong> <%= @movie.release_year %></p>
-    <p><strong>Duration:</strong> <%= @movie.duration %> minutes</p>
-    <p><strong>Director:</strong> <%= @movie.director %></p>
+    <div class="mb-4" style="border-left: 4px solid var(--color-gold); padding-left: 1rem;">
+      <p class="lead" style="color: var(--color-off-white); line-height: 1.8;"><%= @movie.synopsis %></p>
+    </div>
 
-    <p>
-      <strong>Categories:</strong>
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <p><strong style="color: var(--color-gold);">📅 Ano:</strong> <%= @movie.release_year %></p>
+      </div>
+      <div class="col-md-4">
+        <p><strong style="color: var(--color-gold);">⏱️ Duração:</strong> <%= @movie.duration %> min</p>
+      </div>
+      <div class="col-md-4">
+        <p><strong style="color: var(--color-gold);">🎬 Diretor:</strong> <%= @movie.director %></p>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <p class="mb-2"><strong style="color: var(--color-gold);">🏷️ Gêneros:</strong></p>
       <% if @movie.categories.any? %>
-        <% @movie.categories.each do |category| %>
-          <span class="badge bg-primary"><%= category.name %></span>
-        <% end %>
+        <div class="d-flex flex-wrap gap-2">
+          <% @movie.categories.each do |category| %>
+            <span class="badge bg-primary"><%= category.name %></span>
+          <% end %>
+        </div>
       <% else %>
-        No categories assigned.
+        <p class="text-muted">Nenhuma categoria atribuída.</p>
       <% end %>
-    </p>
+    </div>
 
-    <hr>
+    <hr style="border-color: var(--color-medium-gray);">
 
-    <h2>Comments</h2>
+    <h2 style="color: var(--color-gold); font-size: 1.8rem; margin-bottom: 1.5rem;">💬 Comentários</h2>
 
     <div id="comments">
       <%= render @movie.comments.order(created_at: :desc) %>
     </div>
 
-    <hr>
+    <hr style="border-color: var(--color-medium-gray);">
 
-    <h4>Add a comment</h4>
+    <h4 style="color: var(--color-gold); margin-bottom: 1rem;">✍️ Adicionar Comentário</h4>
     <%= form_with(model: [@movie, @movie.comments.build]) do |form| %>
       <% if !user_signed_in? %>
         <div class="mb-3">
@@ -57,7 +82,7 @@
         <%= form.text_area :content, rows: 3, class: 'form-control' %>
       </div>
       <div class="mb-3">
-        <%= form.submit 'Submit', class: 'btn btn-primary' %>
+        <%= form.submit 'Enviar', class: 'btn btn-primary' %>
       </div>
     <% end %>
 
@@ -65,5 +90,5 @@
 </div>
 
 <div class="mt-4">
-  <%= link_to 'Back to movies', movies_path, class: 'btn btn-secondary' %>
+  <%= link_to '⬅ Voltar aos Filmes', movies_path, class: 'btn btn-secondary' %>
 </div>
